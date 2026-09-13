@@ -1,0 +1,9 @@
+<svg width="508" height="808" viewBox="0 0 508 808" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 14C4 8.47714 8.47715 4 14 4H494C499.523 4 504 8.47715 504 14V794C504 799.523 499.523 804 494 804H14C8.47714 804 4 799.523 4 794V14Z" fill="#FFFFFE"/>
+<line x1="4.00024" y1="67.0313" x2="504" y2="67.2701" stroke="black"/>
+<line x1="3.99927" y1="121.301" x2="503.999" y2="120.575" stroke="black"/>
+<line x1="4" y1="687.41" x2="504" y2="687.41" stroke="black"/>
+<rect x="452.656" y="15.084" width="39.8274" height="39.8274" rx="10" fill="black"/>
+<path d="M485.702 21.8672L459.436 48.1332" stroke="white"/>
+<path d="M459.436 21.8672L485.702 48.1332" stroke="white"/>
+</svg>
