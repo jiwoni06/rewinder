@@ -217,12 +217,12 @@ h3 {
 
 /* 수직 스크롤 리스트 (원형 휠 효과 제거) */
 .side-style-container {
-    max-height: 400px;
-    overflow-y: auto;
+    max-height: none;
+    overflow-y: visible;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     padding: 10px 20px 10px 0;
-    touch-action: pan-y;
+    touch-action: auto;
     max-width: 100%;
     pointer-events: auto; /* Ensure container receives clicks and scrolls */
 }

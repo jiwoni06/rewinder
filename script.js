@@ -1600,7 +1600,6 @@ window.handleDrop = async (e, targetCatId, targetIdx) => {
 // --------------------------------------------------------------------------
 window.uploadSetReferenceImage = async (setId, e) => {
     const file = e.target.files[0]; if (!file) return;
-    showMessage("스타일 대표 이미지 압축 중...");
     try {
         const raw = await new Promise(res => { const rd = new FileReader(); rd.onload = ev => res(ev.target.result); rd.readAsDataURL(file); });
         const optimized = await resizeImage(raw, 1920, 0.92);
@@ -1610,11 +1609,9 @@ window.uploadSetReferenceImage = async (setId, e) => {
             set.updatedAt = Date.now();
             saveState(); 
             createUI(); 
-            showMessage("스타일 화보 등록 완료! ✨"); 
         }
     } catch (err) { 
         console.error(err); 
-        showMessage("업로드 오류"); 
     } finally {
         if (e && e.target) e.target.value = "";
     }
@@ -1805,6 +1802,21 @@ function createUI() {
     
     document.querySelectorAll('.thumbnail-grid').forEach((el, i) => {
         if (scrollPositions[i] !== undefined) el.scrollLeft = scrollPositions[i];
+        
+        el.addEventListener('wheel', (e) => {
+            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                const isAtLeft = el.scrollLeft === 0;
+                const isAtRight = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+
+                if (e.deltaY > 0 && !isAtRight) {
+                    e.preventDefault();
+                    el.scrollLeft += e.deltaY;
+                } else if (e.deltaY < 0 && !isAtLeft) {
+                    e.preventDefault();
+                    el.scrollLeft += e.deltaY;
+                }
+            }
+        });
     });
     if (panelScrollContent) panelScrollContent.scrollTop = panelScrollTop;
 }
@@ -1927,7 +1939,7 @@ window.assignSetForItem = (catId, idx, setIdStr) => {
         });
     }
 };
-window.renameStyleSet = (id, n) => { const s = STYLE_SETS.find(x => x.id === id); if(s) { s.name = n.toUpperCase(); saveState(); createUI(); } };
+window.renameStyleSet = (id, n) => { const s = STYLE_SETS.find(x => x.id === id); if(s) { s.name = n; saveState(); } };
 window.saveCurrentToSet = (id) => { cylinders.forEach((cyl, catIdx) => { const raw = Math.round(-cyl.targetRotation / ROTATION_STEP); const fIdx = ((raw % ITEM_COUNT) + ITEM_COUNT) % ITEM_COUNT; CATEGORIES[catIdx].items.forEach(it => { if (it && it.setIds) it.setIds = it.setIds.filter(setId => setId !== id); }); const it = CATEGORIES[catIdx].items[fIdx]; if(it) { if(!it.setIds) it.setIds = []; it.setIds.push(id); } }); editingSetId = id; saveState(); createUI(); showMessage("현재 착장이 스타일 세트에 저장되었습니다! ✨"); };
 
 // 전 데이터 및 이미지를 단일 HTML 파일로 번들링하여 다운로드
