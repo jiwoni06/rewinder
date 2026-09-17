@@ -1484,13 +1484,26 @@ window.handleFileUpload = async (e, id) => {
         return;
     }
 
-    showMessage("고화질 모드: 이미지 처리 중...");
+    showMessage("HD 최적화 모드: 이미지 처리 중...");
     try {
         const urls = await Promise.all(files.map(async f => {
             const rawUrl = await new Promise(res => { const rd = new FileReader(); rd.onload = ev => res(ev.target.result); rd.readAsDataURL(f); });
-            return await resizeImage(rawUrl, 1920, 0.92);
+            return await resizeImage(rawUrl, 1280, 0.90);
         }));
         CATEGORIES[catIdx].items = [...CATEGORIES[catIdx].items, ...urls.map(u => ({url:u, setIds:[]}))].slice(0, ITEM_COUNT);
+        await updateCylinderTexture(catIdx); saveState(); createUI(); showMessage("고화질 업로드 완료! ✨");
+    } catch (err) { console.error(err); showMessage("업로드 실패: 용량을 확인해 주세요."); }
+};
+
+window.handleSingleUpload = async (e, catId, idx) => {
+    const file = e.target.files[0]; if (!file) return;
+    const catIdx = CATEGORIES.findIndex(c => c.id === catId); if (catIdx === -1) return;
+
+    showMessage("HD 최적화 모드: 이미지 처리 중...");
+    try {
+        const rawUrl = await new Promise(res => { const rd = new FileReader(); rd.onload = ev => res(ev.target.result); rd.readAsDataURL(file); });
+        const url = await resizeImage(rawUrl, 1280, 0.90);
+        CATEGORIES[catIdx].items[idx].url = url;
         await updateCylinderTexture(catIdx); saveState(); createUI(); showMessage("고화질 업로드 완료! ✨");
     } catch (err) { console.error(err); showMessage("업로드 실패: 용량을 확인해 주세요."); }
 };
@@ -1506,8 +1519,10 @@ window.deleteImage = async (catId, idx) => {
     const gridIdx = CATEGORIES.findIndex(c => c.id === catId);
     const horizontalScroll = (gridIdx !== -1 && grids[gridIdx]) ? grids[gridIdx].scrollLeft : 0;
 
-    CATEGORIES[catId].items.splice(idx, 1);
-    await updateCylinderTexture(catId);
+    if (gridIdx !== -1 && CATEGORIES[gridIdx].items[idx]) {
+        CATEGORIES[gridIdx].items[idx].url = "";
+    }
+    await updateCylinderTexture(gridIdx !== -1 ? gridIdx : catId);
     saveState();
     createUI();
     
@@ -1728,7 +1743,7 @@ function createUI() {
                      ondragleave="handleDragLeave(event)"
                      ondragend="handleDragEnd(event)"
                      ondrop="handleDrop(event, ${cat.id}, ${i})">
-                    <div class="thumb" onclick="showInfoPopup(${cat.id}, ${i})"><img src="${item.url}"></div>
+                    <div class="thumb" ${item.url ? `onclick="showInfoPopup(${cat.id}, ${i})"` : ''}>${item.url ? `<img src="${item.url}">` : `<label style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#666; font-size:12px; font-weight:bold; background:#1e293b; border-radius:4px; cursor:pointer;">NO IMG<input type="file" accept="image/*" class="hidden" onchange="handleSingleUpload(event, ${cat.id}, ${i})"></label>`}</div>
                     <div class="delete-btn" onclick="deleteImage(${cat.id}, ${i})" title="삭제">×</div>
                     <div class="item-inputs-stack">
                         <div class="set-assigner-wrapper">
@@ -2484,11 +2499,15 @@ function returnToMainScreen() {
     }
 }
 
-window.addEventListener('pointermove', resetGlobalIdleTimer, { passive: true });
-window.addEventListener('pointerdown', resetGlobalIdleTimer, { passive: true });
-window.addEventListener('wheel', resetGlobalIdleTimer, { passive: true });
-window.addEventListener('keydown', resetGlobalIdleTimer, { passive: true });
-window.addEventListener('touchstart', resetGlobalIdleTimer, { passive: true });
-window.addEventListener('click', resetGlobalIdleTimer, { passive: true });
+window.addEventListener('pointermove', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('pointerdown', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('wheel', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('keydown', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('touchstart', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('touchmove', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('touchend', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('click', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('mousemove', resetGlobalIdleTimer, { passive: true, capture: true });
+window.addEventListener('mousedown', resetGlobalIdleTimer, { passive: true, capture: true });
 
 resetGlobalIdleTimer();
