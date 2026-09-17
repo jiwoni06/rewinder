@@ -1330,7 +1330,9 @@ function onPointerUp(e) {
     hasDragged = false;
     isHovering = false;
     hoveredCylinderIndex = -1;
-    pauseAutoDuration = 3000;
+    if (activeCylinderIndex !== -1) {
+        pauseAutoDuration = 3000;
+    }
     activeCylinderIndex = -1;
 }
 
