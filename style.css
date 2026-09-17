@@ -940,10 +940,11 @@ h3 {
     top: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: #0f172a;
-    color: white;
+    background: #ffffff;
+    color: #000000;
     padding: 14px 28px;
     border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     z-index: 3000;
     display: none;
 }

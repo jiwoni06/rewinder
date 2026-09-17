@@ -595,25 +595,19 @@ async function init() {
     if (cont) {
         cont.addEventListener('pointerdown', onPointerDown); 
         cont.addEventListener('dblclick', (e) => {
-            // 이미지 더블클릭 시 팝업, 배경 더블클릭 시 전체화면
-            if (handleCylinderDblClick(e)) return;
-            if (!isLocked) {
-                toggleFullScreen();
-            }
+            // 이미지 더블클릭 시 팝업
+            handleCylinderDblClick(e);
         });
     }
     window.addEventListener('pointermove', onPointerMove); 
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerUp); // 터치 제스처 중단 시 멈춤 방지
     
-    // 배경 영역 더블클릭 시 전체화면 토글
+    // 더블클릭 이벤트 처리
     window.addEventListener('dblclick', (e) => {
         if (e.target === document.body || e.target.id === 'canvas-container' || e.target.tagName === 'CANVAS') {
-            // 이미지 위에서 더블클릭한 경우 전체화면 전환하지 않음
-            if (handleCylinderDblClick(e)) return;
-            if (!isLocked) {
-                toggleFullScreen();
-            }
+            // 이미지 위에서 더블클릭한 경우 팝업
+            handleCylinderDblClick(e);
         }
     });
 
@@ -2362,7 +2356,7 @@ window.closeInstructions = () => {
 window.showInstructions = () => { const o = document.getElementById('instruction-overlay'); if (o) { o.style.display = 'flex'; setTimeout(() => o.style.opacity = '1', 10); } };
 
 // Shift + L 키 입력 시 전시 모드(Locked Mode) <-> 편집 모드 전환
-window.addEventListener('keydown', (e) => { if (e.shiftKey && e.code === 'KeyL') { isLocked = !isLocked; document.body.classList.toggle('mode-locked', isLocked); showMessage(isLocked ? "🔒 전시 모드" : "🔓 편집 모드"); } });
+window.addEventListener('keydown', (e) => { if (e.shiftKey && e.code === 'KeyL') { isLocked = !isLocked; document.body.classList.toggle('mode-locked', isLocked); showMessage(isLocked ? "전시 모드" : "편집 모드"); } });
 
 function toggleFullScreen() {
     if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
@@ -2375,9 +2369,35 @@ function toggleFullScreen() {
         if (document.exitFullscreen) document.exitFullscreen();
         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
         else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-        else if (document.msExitFullscreen) docEl.msExitFullscreen();
+        else if (document.msExitFullscreen) document.msExitFullscreen();
     }
 }
+
+let consecutiveClicks = 0;
+let clickTimer = null;
+window.addEventListener('click', (e) => {
+    consecutiveClicks++;
+    if (clickTimer) clearTimeout(clickTimer);
+    
+    if (consecutiveClicks >= 4) {
+        consecutiveClicks = 0;
+        const isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        
+        toggleFullScreen();
+        
+        if (!isFullScreen) {
+            isLocked = true;
+            document.body.classList.toggle('mode-locked', isLocked);
+            if (typeof showMessage === 'function') showMessage("전시 모드");
+        } else {
+            isLocked = false;
+            document.body.classList.toggle('mode-locked', isLocked);
+            if (typeof showMessage === 'function') showMessage("편집 모드");
+        }
+    } else {
+        clickTimer = setTimeout(() => { consecutiveClicks = 0; }, 400);
+    }
+});
 
 // digital clock
 function updateDigitalClock() {
