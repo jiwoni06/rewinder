@@ -2431,3 +2431,23 @@ window.addEventListener('beforeunload', () => {
         _saveStateInternal();
     }
 });
+
+// ==========================================================================
+// 20초 유휴 상태 시 페이지 새로고침 (Idle Timer)
+// ==========================================================================
+let globalIdleTimer = null;
+function resetGlobalIdleTimer() {
+    if (globalIdleTimer) clearTimeout(globalIdleTimer);
+    globalIdleTimer = setTimeout(() => {
+        location.reload();
+    }, 20000);
+}
+
+window.addEventListener('pointermove', resetGlobalIdleTimer, { passive: true });
+window.addEventListener('pointerdown', resetGlobalIdleTimer, { passive: true });
+window.addEventListener('wheel', resetGlobalIdleTimer, { passive: true });
+window.addEventListener('keydown', resetGlobalIdleTimer, { passive: true });
+window.addEventListener('touchstart', resetGlobalIdleTimer, { passive: true });
+window.addEventListener('click', resetGlobalIdleTimer, { passive: true });
+
+resetGlobalIdleTimer();
