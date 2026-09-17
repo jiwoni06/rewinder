@@ -767,7 +767,8 @@ h3 {
     cursor: pointer;
 }
 
-.thumb-container:hover .delete-btn {
+.thumb-container:hover .delete-btn,
+.set-thumb-preview:hover .delete-btn {
     scale: 1;
 }
 
@@ -985,7 +986,8 @@ h3 {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
     cursor: default;
     border: none;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -1420,11 +1422,13 @@ h3 {
 #info-desc {
     font-size: 13px;
     color: #000000;
-    line-height: 1.5;
+    line-height: 1.6;
+    letter-spacing: -0.02em;
     font-weight: 500;
     white-space: pre-wrap;
     max-height: 100%;
     overflow-y: auto;
+    word-break: keep-all;
 }
 
 

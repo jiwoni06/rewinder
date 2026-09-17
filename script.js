@@ -799,20 +799,40 @@ function animate(time) {
                 const flat = geo.userData.flatPositions;
                 const posAttr = geo.attributes.position;
                 const count = posAttr.count;
-                for (let i = 0; i < count; i++) {
-                    const u = geo.attributes.uv.getX(i);
-                    const theta = (u - 0.5) * Math.PI * 2;
-                    const archFactor = sinT * Math.cos(theta * 0.5) * 0.08;
+                if (t === 0) {
+                    posAttr.array.set(orig);
+                    if (geo.userData.origBox) {
+                        geo.boundingBox.copy(geo.userData.origBox);
+                        geo.boundingSphere.copy(geo.userData.origSphere);
+                    } else {
+                        geo.computeBoundingBox();
+                        geo.computeBoundingSphere();
+                    }
+                } else if (t === 1) {
+                    posAttr.array.set(flat);
+                    if (geo.userData.flatBox) {
+                        geo.boundingBox.copy(geo.userData.flatBox);
+                        geo.boundingSphere.copy(geo.userData.flatSphere);
+                    } else {
+                        geo.computeBoundingBox();
+                        geo.computeBoundingSphere();
+                    }
+                } else {
+                    for (let i = 0; i < count; i++) {
+                        const u = geo.attributes.uv.getX(i);
+                        const theta = (u - 0.5) * Math.PI * 2;
+                        const archFactor = sinT * Math.cos(theta * 0.5) * 0.08;
 
-                    const px = orig[i * 3] * (1 - t) + flat[i * 3] * t;
-                    const py = orig[i * 3 + 1] * (1 - t) + flat[i * 3 + 1] * t;
-                    const pz = orig[i * 3 + 2] * (1 - t) + (flat[i * 3 + 2] + archFactor) * t;
+                        const px = orig[i * 3] * (1 - t) + flat[i * 3] * t;
+                        const py = orig[i * 3 + 1] * (1 - t) + flat[i * 3 + 1] * t;
+                        const pz = orig[i * 3 + 2] * (1 - t) + (flat[i * 3 + 2] + archFactor) * t;
 
-                    posAttr.setXYZ(i, px, py, pz);
+                        posAttr.setXYZ(i, px, py, pz);
+                    }
+                    geo.computeBoundingSphere();
+                    geo.computeBoundingBox();
                 }
                 posAttr.needsUpdate = true;
-                geo.computeBoundingSphere();
-                geo.computeBoundingBox();
             }
         }
     });
@@ -960,6 +980,21 @@ async function createCylinderMesh(index) {
     geo.userData.flatPositions = flatPositions;
     geo.userData.lastT = -1;
     geo.setAttribute('flatPosition', new THREE.BufferAttribute(flatPositions, 3));
+    
+    geo.computeBoundingBox();
+    geo.computeBoundingSphere();
+    geo.userData.origBox = geo.boundingBox.clone();
+    geo.userData.origSphere = geo.boundingSphere.clone();
+    
+    posAttr.array.set(flatPositions);
+    geo.computeBoundingBox();
+    geo.computeBoundingSphere();
+    geo.userData.flatBox = geo.boundingBox.clone();
+    geo.userData.flatSphere = geo.boundingSphere.clone();
+    
+    posAttr.array.set(origPositions);
+    geo.computeBoundingBox();
+    geo.computeBoundingSphere();
 
     // TV/임베디드 GPU(Mali 계열)에 최적화된 고성능 MeshLambertMaterial 적용 (무거운 BRDF 연산 제거로 1080p 렌더링 3~4배 가속)
     const mat = new THREE.MeshLambertMaterial({ 
@@ -1628,6 +1663,16 @@ window.uploadSetReferenceImage = async (setId, e) => {
     }
 };
 
+window.deleteStyleImage = (setId) => {
+    const set = STYLE_SETS.find(s => s.id === setId);
+    if (set) { 
+        set.repUrl = ""; 
+        set.updatedAt = Date.now();
+        saveState(); 
+        createUI(); 
+    }
+};
+
 window.showSetReference = () => {
     if (!editingSetId) { showMessage("먼저 상단에서 스타일을 선택해 주세요."); return; }
     const set = STYLE_SETS.find(s => s.id === editingSetId);
@@ -1782,7 +1827,8 @@ function createUI() {
             <div class="set-thumb-preview ${s.repUrl ? 'has-img' : ''}" 
                  onclick="${s.repUrl ? `showSetThumbnailPreview(${s.id})` : ''}" 
                  title="${s.repUrl ? '룩북 이미지 크게 보기' : '이미지 없음'}">
-                ${s.repUrl ? `<img src="${s.repUrl}" alt="${s.name}">` : `
+                ${s.repUrl ? `<img src="${s.repUrl}" alt="${s.name}">
+                              <div class="delete-btn" onclick="event.stopPropagation(); deleteStyleImage(${s.id})" title="이미지 삭제">×</div>` : `
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                         <circle cx="8.5" cy="8.5" r="1.5"></circle>
