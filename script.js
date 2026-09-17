@@ -1484,14 +1484,14 @@ window.handleFileUpload = async (e, id) => {
         return;
     }
 
-    showMessage("100장 수용 모드: 초고밀도 압축 중...");
+    showMessage("고화질 모드: 이미지 처리 중...");
     try {
         const urls = await Promise.all(files.map(async f => {
             const rawUrl = await new Promise(res => { const rd = new FileReader(); rd.onload = ev => res(ev.target.result); rd.readAsDataURL(f); });
-            return await resizeImage(rawUrl, 800, 0.85);
+            return await resizeImage(rawUrl, 1920, 0.92);
         }));
         CATEGORIES[catIdx].items = [...CATEGORIES[catIdx].items, ...urls.map(u => ({url:u, setIds:[]}))].slice(0, ITEM_COUNT);
-        await updateCylinderTexture(catIdx); saveState(); createUI(); showMessage("최적화 업로드 완료! (100장 준비 완료) ✨");
+        await updateCylinderTexture(catIdx); saveState(); createUI(); showMessage("고화질 업로드 완료! ✨");
     } catch (err) { console.error(err); showMessage("업로드 실패: 용량을 확인해 주세요."); }
 };
 
@@ -2433,14 +2433,55 @@ window.addEventListener('beforeunload', () => {
 });
 
 // ==========================================================================
-// 20초 유휴 상태 시 페이지 새로고침 (Idle Timer)
+// 3분 유휴 상태 시 메인 화면으로 복귀 (Idle Timer)
 // ==========================================================================
 let globalIdleTimer = null;
 function resetGlobalIdleTimer() {
     if (globalIdleTimer) clearTimeout(globalIdleTimer);
     globalIdleTimer = setTimeout(() => {
-        location.reload();
-    }, 20000);
+        returnToMainScreen();
+    }, 180000); // 3분 = 180,000ms
+}
+
+function returnToMainScreen() {
+    // 1. 정보 팝업 닫기
+    const infoPopup = document.getElementById('info-popup');
+    if (infoPopup) infoPopup.style.display = 'none';
+
+    // 2. 관리 패널 닫기
+    const p = document.getElementById('management-panel');
+    if (p) p.style.display = 'none';
+
+    // 3. 2D 펼침 모드 해제
+    if (typeof isFlatView !== 'undefined' && isFlatView && typeof window.toggleFlatView === 'function') {
+        window.toggleFlatView();
+    }
+
+    // 4. 카메라 줌 및 원통 회전 초기화
+    if (typeof targetZoom !== 'undefined') targetZoom = 1.0;
+    if (typeof cylinders !== 'undefined') {
+        cylinders.forEach(c => {
+            if (c) c.targetRotation = 0;
+        });
+    }
+
+    // 5. 상태 초기화
+    if (typeof isDragging !== 'undefined') isDragging = false;
+    if (typeof isHovering !== 'undefined') isHovering = false;
+    if (typeof activeCylinderIndex !== 'undefined') activeCylinderIndex = -1;
+    if (typeof hoveredCylinderIndex !== 'undefined') hoveredCylinderIndex = -1;
+    if (typeof pauseAutoDuration !== 'undefined') pauseAutoDuration = 0;
+
+    // 6. 인스트럭션 화면(메인 대기 화면) 띄우기
+    if (typeof window.showInstructions === 'function') {
+        window.showInstructions();
+    } else {
+        const o = document.getElementById('instruction-overlay'); 
+        if (o) { 
+            o.style.display = 'flex'; 
+            setTimeout(() => o.style.opacity = '1', 10); 
+        }
+    }
 }
 
 window.addEventListener('pointermove', resetGlobalIdleTimer, { passive: true });
