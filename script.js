@@ -629,7 +629,7 @@ window.addEventListener('wheel', (e) => {
     _raycaster.setFromCamera(_pointerVec, camera);
     const intersects = _raycaster.intersectObjects(getAllInteractableMeshes());
     
-    let targetCat = hoveredCylinderIndex;
+    let targetCat = -1;
     if (intersects.length > 0) {
         targetCat = findCategoryIndexByMesh(intersects[0].object);
     }
