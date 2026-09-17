@@ -1636,7 +1636,7 @@ window.showSetReference = () => {
     document.getElementById('info-img').src = set.repUrl;
     document.getElementById('info-category').innerText = "STYLE";
     document.getElementById('info-title').innerText = set.name;
-    document.getElementById('info-desc').innerText = "이 스타일 조합에 대한 오피셜 룩북 이미지입니다.";
+    document.getElementById('info-desc').innerText = set.desc || "이 스타일 조합에 대한 오피셜 룩북 이미지입니다.";
     const linkBtn = document.getElementById('info-link');
     const imgLink = document.getElementById('info-img-link');
     const buyOverlay = document.getElementById('info-buy-overlay');
@@ -1661,7 +1661,7 @@ window.showSetThumbnailPreview = (setId) => {
     document.getElementById('info-img').src = set.repUrl;
     document.getElementById('info-category').innerText = "STYLE LOOKBOOK";
     document.getElementById('info-title').innerText = set.name;
-    document.getElementById('info-desc').innerText = "이 스타일 조합에 대한 오피셜 룩북 이미지입니다.";
+    document.getElementById('info-desc').innerText = set.desc || "이 스타일 조합에 대한 오피셜 룩북 이미지입니다.";
     const linkBtn = document.getElementById('info-link');
     const imgLink = document.getElementById('info-img-link');
     const buyOverlay = document.getElementById('info-buy-overlay');
@@ -1793,6 +1793,7 @@ function createUI() {
             <div class="flex flex-col justify-between self-stretch py-1 gap-2 flex-1 min-w-0">
                 <div>
                     <input type="text" value="${s.name}" oninput="renameStyleSet(${s.id}, this.value)" class="set-name-edit" placeholder="STYLE NAME">
+                    <textarea oninput="updateStyleSetDesc(${s.id}, this.value)" class="set-desc-edit" placeholder="상세정보를 입력하세요">${s.desc || ''}</textarea>
                     <div class="text-[10px] font-bold mt-1 ${s.repUrl ? 'text-slate-800' : 'text-slate-400'}">
                         ${s.repUrl ? '● 이미지 등록됨' : '○ 이미지 없음'}
                     </div>
@@ -1951,6 +1952,7 @@ window.assignSetForItem = (catId, idx, setIdStr) => {
     }
 };
 window.renameStyleSet = (id, n) => { const s = STYLE_SETS.find(x => x.id === id); if(s) { s.name = n; saveState(); } };
+window.updateStyleSetDesc = (id, d) => { const s = STYLE_SETS.find(x => x.id === id); if(s) { s.desc = d; saveState(); } };
 window.saveCurrentToSet = (id) => { cylinders.forEach((cyl, catIdx) => { const raw = Math.round(-cyl.targetRotation / ROTATION_STEP); const fIdx = ((raw % ITEM_COUNT) + ITEM_COUNT) % ITEM_COUNT; CATEGORIES[catIdx].items.forEach(it => { if (it && it.setIds) it.setIds = it.setIds.filter(setId => setId !== id); }); const it = CATEGORIES[catIdx].items[fIdx]; if(it) { if(!it.setIds) it.setIds = []; it.setIds.push(id); } }); editingSetId = id; saveState(); createUI(); showMessage("현재 착장이 스타일 세트에 저장되었습니다! ✨"); };
 
 // 전 데이터 및 이미지를 단일 HTML 파일로 번들링하여 다운로드

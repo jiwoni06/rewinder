@@ -1022,6 +1022,23 @@ h3 {
     padding: 2px 4px;
 }
 
+.set-desc-edit {
+    width: 100%;
+    min-height: 40px;
+    font-size: 10px;
+    color: #444;
+    background: transparent;
+    outline: none;
+    border: none;
+    padding: 2px 4px;
+    margin-top: 4px;
+    resize: vertical;
+    border-radius: 4px;
+}
+.set-desc-edit:focus {
+    background: #f1f5f9;
+}
+
 .set-action-btns {
     display: flex;
     gap: 4px;
