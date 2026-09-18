@@ -270,8 +270,8 @@ h3 {
 
 .ui-overlay {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 24px;
+    left: 24px;
     pointer-events: auto;
     z-index: 10;
 }
@@ -781,7 +781,7 @@ h3 {
    -------------------------------------------------------------------------- */
 .controls {
     position: absolute;
-    bottom: 40px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -1535,8 +1535,8 @@ canvas {
 
 .digital-date {
     position: fixed;
-    bottom: 40px;
-    left: 20px;
+    bottom: 24px;
+    left: 24px;
     font-size: 1.2rem;
     font-weight: bold;
     color: #fafaf8;
