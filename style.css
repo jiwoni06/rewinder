@@ -1778,7 +1778,8 @@ canvas {
 
     #info-title { font-size: 12px !important; margin-bottom: 2px !important; }
     #info-desc { font-size: 9px !important; line-height: 1.2 !important; }
-    .info-tag { font-size: 9px !important; height: 24px !important; padding: 0 8px !important; }
+    .info-tag { font-size: 9px !important; height: 24px !important; padding: 0 8px !important; line-height: 24px !important; }
+    .close-info, .close-info img { width: 32px !important; height: 32px !important; }
     .info-body { padding: 2% !important; }
     .info-header { padding: 2% !important; }
     .info-title-container { padding: 2% !important; }
@@ -1819,12 +1820,12 @@ canvas {
 /* 15. 모바일 가로 모드 (Landscape) - UI 요소 축소하여 원형 겹침 방지 */
 @media (max-height: 500px) and (orientation: landscape) {
     .ui-overlay { top: max(10px, var(--sat)) !important; left: max(24px, var(--sal)) !important; }
-    .ui-overlay img { width: 90px !important; margin-bottom: 4px !important; }
-    .title-svg-interactive { width: 140px !important; }
+    .ui-overlay img { width: 120px !important; margin-bottom: 6px !important; }
+    .title-svg-interactive { width: 180px !important; }
     
     #side-style-wrapper { 
-        top: max(95px, calc(var(--sat) + 85px)) !important;
-        transform: scale(0.65) !important; 
+        top: max(75px, calc(var(--sat) + 65px)) !important;
+        transform: scale(0.85) !important; 
         transform-origin: top left !important; 
         left: max(24px, var(--sal)) !important; 
         pointer-events: auto !important;
@@ -1832,26 +1833,33 @@ canvas {
     
     .side-style-header { display: block !important; margin-bottom: 12px !important; }
     .side-style-container {
-        max-height: calc((100vh - 150px) / 0.65) !important;
+        max-height: calc((100vh - 130px) / 0.85) !important;
         overflow-y: auto !important;
         padding-bottom: 20px !important;
     }
     
-    .side-style-item { font-size: 0.55rem !important; padding: 2px 6px !important; }
-    .side-style-item.active { font-size: 0.65rem !important; }
+    .side-style-item { font-size: 0.75rem !important; padding: 4px 6px !important; }
+    .side-style-item.active { font-size: 0.85rem !important; }
     
-    .controls { bottom: max(10px, var(--sab)) !important; gap: 10px !important; }
-    .controls a img, .controls button img { width: 40px !important; height: 40px !important; }
+    .controls { 
+        bottom: max(10px, var(--sab)) !important; 
+        left: auto !important;
+        right: max(90px, calc(var(--sar) + 90px)) !important;
+        transform: none !important;
+        gap: 12px !important; 
+    }
+    .controls a img, .controls button img { width: 52px !important; height: 52px !important; }
     
-    #management-btn-wrapper { bottom: max(10px, var(--sab)) !important; right: max(24px, var(--sar)) !important; width: 40px !important; height: 40px !important; }
-    #management-btn-wrapper button svg { width: 26px !important; height: 26px !important; }
+    #management-btn-wrapper { bottom: max(10px, var(--sab)) !important; right: max(24px, var(--sar)) !important; width: 52px !important; height: 52px !important; }
+    #management-btn-wrapper button svg { width: 30px !important; height: 30px !important; }
     
     .digital-date { font-size: 0.65rem !important; bottom: max(10px, var(--sab)) !important; left: max(24px, var(--sal)) !important; top: auto !important; }
-    #audio-control-btn { top: max(10px, var(--sat)) !important; right: max(24px, var(--sar)) !important; width: 32px !important; height: 32px !important; }
+    #audio-control-btn { top: max(12px, var(--sat)) !important; right: max(24px, var(--sar)) !important; width: 44px !important; height: 44px !important; }
 
     #info-title { font-size: 11px !important; margin-bottom: 2px !important; }
     #info-desc { font-size: 8px !important; line-height: 1.2 !important; }
-    .info-tag { font-size: 8px !important; height: 20px !important; padding: 0 6px !important; margin: 0 !important; }
+    .info-tag { font-size: 8px !important; height: 20px !important; padding: 0 6px !important; margin: 0 !important; line-height: 20px !important; }
+    .close-info, .close-info img { width: 26px !important; height: 26px !important; }
     .info-body { padding: 2% !important; }
     .info-header { padding: 2% !important; }
     .info-title-container { padding: 2% !important; }
