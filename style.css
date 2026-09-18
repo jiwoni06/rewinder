@@ -1762,12 +1762,18 @@ canvas {
     .info-card {
         width: 92vw !important;
         max-width: 360px !important;
-        height: auto !important;
-        max-height: 85vh !important;
-        max-height: 85dvh !important;
+        height: 75vh !important;
+        max-height: 75dvh !important;
+        display: flex !important;
+        flex-direction: column !important;
         border-radius: 16px !important;
-        overflow-y: auto !important;
+        overflow: hidden !important;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    .popup-image-container {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
     }
 
     /* 9. 온보딩 이용 안내 모달 */
@@ -1801,4 +1807,26 @@ canvas {
         font-size: 0.72rem;
         padding: 5px 11px;
     }
+}
+
+/* 15. 모바일 가로 모드 (Landscape) - UI 요소 축소하여 원형 겹침 방지 */
+@media (max-height: 500px) and (orientation: landscape) {
+    .ui-overlay { top: 10px !important; left: 10px !important; }
+    .ui-overlay img { width: 90px !important; margin-bottom: 4px !important; }
+    .title-svg-interactive { width: 140px !important; }
+    
+    #side-style-wrapper { 
+        transform: translateY(-50%) scale(0.65) !important; 
+        transform-origin: left center !important; 
+        left: 10px !important; 
+    }
+    
+    .controls { bottom: 10px !important; gap: 10px !important; }
+    .controls a img, .controls button img { width: 44px !important; height: 44px !important; }
+    
+    #management-btn-wrapper { bottom: 10px !important; right: 10px !important; width: 44px !important; height: 44px !important; }
+    #management-btn-wrapper button svg { width: 28px !important; height: 28px !important; }
+    
+    .digital-date { font-size: 0.65rem !important; bottom: 10px !important; left: 10px !important; top: auto !important; }
+    #audio-control-btn { top: 10px !important; right: 10px !important; width: 36px !important; height: 36px !important; }
 }

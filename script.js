@@ -517,8 +517,9 @@ function getCameraDistance(t = (typeof flattenProgress !== 'undefined' ? flatten
     const aspect = window.innerWidth / window.innerHeight;
     let aspectMultiplier = 1.0;
     if (aspect < 1.4) {
-        // 스마트폰 세로 모드(aspect < 1.4)에서 양옆이 잘리더라도 원형이 크게 보이도록 카메라 거리 축소
-        aspectMultiplier = 1.0;
+        // 스마트폰 세로 모드(aspect < 1.4)에서 텍스트와 겹치지 않게 적절히 큼직하도록 비례 조정 (기존 0.95 -> 0.55)
+        aspectMultiplier = (1.4 / aspect) * 0.55;
+        aspectMultiplier = Math.max(1.0, Math.min(aspectMultiplier, 2.5));
     }
     const baseCamZ = (3.0 * (1 - t) + 3.2 * t) * aspectMultiplier;
     return baseCamZ;
