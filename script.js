@@ -728,23 +728,20 @@ async function loadEverything() {
         dataToLoad.rotations = window.EMBEDDED_DATA.rotations;
     }
     
-    // 원통 텍스처 및 각도 데이터 적용 (병렬 처리로 속도 최적화)
+    // 원통 텍스처 및 각도 데이터 적용 (병렬 처리 및 비동기 논블로킹 최적화)
     const currentRots = dataToLoad.rotations || [];
-    const texturePromises = [];
     
     for (let i = 0; i < CATEGORIES.length; i++) {
-        texturePromises.push((async () => {
-            await updateCylinderTexture(i);
-            if (currentRots[i] !== undefined) {
-                cylinders[i].targetRotation = currentRots[i];
-                cylinders[i].currentAngle = currentRots[i];
-                cylinders[i].flatReferenceAngle = currentRots[i];
-                cylinders[i].group.rotation.y = currentRots[i];
-            }
-        })());
+        // 즉각적인 렌더링을 위해 각도는 먼저 동기적으로 적용
+        if (currentRots[i] !== undefined) {
+            cylinders[i].targetRotation = currentRots[i];
+            cylinders[i].currentAngle = currentRots[i];
+            cylinders[i].flatReferenceAngle = currentRots[i];
+            cylinders[i].group.rotation.y = currentRots[i];
+        }
+        // 무거운 텍스처(이미지) 로딩은 백그라운드에서 논블로킹으로 처리하여 스플래시 대기 시간 완전히 제거
+        updateCylinderTexture(i);
     }
-    
-    await Promise.all(texturePromises);
     
     updateTopCarousel(); 
     createUI();
