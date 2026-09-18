@@ -1776,13 +1776,13 @@ canvas {
         min-height: 0 !important;
     }
 
-    #info-title { font-size: 12px !important; margin-bottom: 2px !important; }
-    #info-desc { font-size: 9px !important; line-height: 1.2 !important; }
-    .info-tag { font-size: 9px !important; height: 24px !important; padding: 0 8px !important; line-height: 24px !important; }
-    .close-info, .close-info img { width: 32px !important; height: 32px !important; }
-    .info-body { padding: 2% !important; }
-    .info-header { padding: 2% !important; }
-    .info-title-container { padding: 2% !important; }
+    #info-title { font-size: 14px !important; margin-bottom: 4px !important; }
+    #info-desc { font-size: 11px !important; line-height: 1.4 !important; }
+    .info-tag { font-size: 10px !important; height: 28px !important; padding: 0 10px !important; line-height: 28px !important; }
+    .close-info, .close-info img { width: 28px !important; height: 28px !important; }
+    .info-body { padding: 4% !important; }
+    .info-header { padding: 4% !important; }
+    .info-title-container { padding: 4% !important; }
 
     /* 9. 온보딩 이용 안내 모달 */
     .instruction-card {
@@ -1819,48 +1819,47 @@ canvas {
 
 /* 15. 모바일 가로 모드 (Landscape) - UI 요소 축소하여 원형 겹침 방지 */
 @media (max-height: 500px) and (orientation: landscape) {
-    .ui-overlay { top: max(10px, var(--sat)) !important; left: max(24px, var(--sal)) !important; }
-    .ui-overlay img { width: 120px !important; margin-bottom: 6px !important; }
+    .ui-overlay { top: max(20px, var(--sat)) !important; left: max(30px, var(--sal)) !important; }
+    .ui-overlay img { width: 140px !important; margin-bottom: 6px !important; }
     .title-svg-interactive { width: 180px !important; }
     
     #side-style-wrapper { 
-        top: max(75px, calc(var(--sat) + 65px)) !important;
-        transform: scale(0.85) !important; 
-        transform-origin: top left !important; 
-        left: max(24px, var(--sal)) !important; 
+        top: max(85px, calc(var(--sat) + 75px)) !important;
+        transform: none !important; 
+        left: max(30px, var(--sal)) !important; 
         pointer-events: auto !important;
     }
     
-    .side-style-header { display: block !important; margin-bottom: 12px !important; }
+    .side-style-header { display: block !important; margin-bottom: 12px !important; font-size: 1.2rem !important; }
     .side-style-container {
-        max-height: calc((100vh - 130px) / 0.85) !important;
+        max-height: calc(100vh - 160px) !important;
         overflow-y: auto !important;
         padding-bottom: 20px !important;
     }
     
-    .side-style-item { font-size: 0.75rem !important; padding: 4px 6px !important; }
-    .side-style-item.active { font-size: 0.85rem !important; }
+    .side-style-item { font-size: 0.65rem !important; padding: 4px 0 !important; }
+    .side-style-item.active { font-size: 0.75rem !important; }
     
     .controls { 
-        bottom: max(10px, var(--sab)) !important; 
+        bottom: max(20px, var(--sab)) !important; 
         left: auto !important;
-        right: max(90px, calc(var(--sar) + 90px)) !important;
+        right: max(100px, calc(var(--sar) + 100px)) !important;
         transform: none !important;
-        gap: 12px !important; 
+        gap: 16px !important; 
     }
-    .controls a img, .controls button img { width: 52px !important; height: 52px !important; }
+    .controls a img, .controls button img { width: 56px !important; height: 56px !important; }
     
-    #management-btn-wrapper { bottom: max(10px, var(--sab)) !important; right: max(24px, var(--sar)) !important; width: 52px !important; height: 52px !important; }
-    #management-btn-wrapper button svg { width: 30px !important; height: 30px !important; }
+    #management-btn-wrapper { bottom: max(20px, var(--sab)) !important; right: max(30px, var(--sar)) !important; width: 56px !important; height: 56px !important; }
+    #management-btn-wrapper button svg { width: 32px !important; height: 32px !important; }
     
-    .digital-date { font-size: 0.65rem !important; bottom: max(10px, var(--sab)) !important; left: max(24px, var(--sal)) !important; top: auto !important; }
-    #audio-control-btn { top: max(12px, var(--sat)) !important; right: max(24px, var(--sar)) !important; width: 44px !important; height: 44px !important; }
+    .digital-date { font-size: 0.7rem !important; bottom: max(20px, var(--sab)) !important; left: max(30px, var(--sal)) !important; top: auto !important; }
+    #audio-control-btn { top: max(20px, var(--sat)) !important; right: max(30px, var(--sar)) !important; width: 36px !important; height: 36px !important; }
 
-    #info-title { font-size: 11px !important; margin-bottom: 2px !important; }
-    #info-desc { font-size: 8px !important; line-height: 1.2 !important; }
-    .info-tag { font-size: 8px !important; height: 20px !important; padding: 0 6px !important; margin: 0 !important; line-height: 20px !important; }
+    #info-title { font-size: 12px !important; margin-bottom: 2px !important; }
+    #info-desc { font-size: 9px !important; line-height: 1.3 !important; }
+    .info-tag { font-size: 9px !important; height: 26px !important; padding: 0 8px !important; margin: 0 !important; line-height: 26px !important; }
     .close-info, .close-info img { width: 26px !important; height: 26px !important; }
-    .info-body { padding: 2% !important; }
-    .info-header { padding: 2% !important; }
-    .info-title-container { padding: 2% !important; }
+    .info-body { padding: 4% !important; }
+    .info-header { padding: 4% !important; }
+    .info-title-container { padding: 4% !important; }
 }
