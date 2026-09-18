@@ -940,7 +940,7 @@ h3 {
     top: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: #fafaf8;
+    background: #ffffff;
     color: #000000;
     padding: 14px 28px;
     border-radius: 16px;
@@ -1251,7 +1251,7 @@ h3 {
     height: min(800px, 85vh);
     width: calc(min(800px, 85vh) * (500 / 800));
     max-width: 90vw;
-    background: #fafaf8;
+    background: #ffffff;
     border: none;
     border-radius: 10px;
     overflow: hidden;
@@ -1825,14 +1825,18 @@ canvas {
     
     #side-style-wrapper { 
         top: max(85px, calc(var(--sat) + 75px)) !important;
+        bottom: max(60px, calc(var(--sab) + 50px)) !important;
         transform: none !important; 
         left: max(30px, var(--sal)) !important; 
         pointer-events: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
     }
     
     .side-style-header { display: block !important; margin-bottom: 12px !important; font-size: 1.2rem !important; }
     .side-style-container {
-        max-height: calc(100vh - 160px) !important;
+        max-height: none !important;
+        flex: 1 !important;
         overflow-y: auto !important;
         padding-bottom: 20px !important;
     }
@@ -1843,14 +1847,14 @@ canvas {
     .controls { 
         bottom: max(20px, var(--sab)) !important; 
         left: auto !important;
-        right: max(100px, calc(var(--sar) + 100px)) !important;
+        right: max(30px, var(--sar)) !important;
         transform: none !important;
         gap: 16px !important; 
     }
     .controls a img, .controls button img { width: 56px !important; height: 56px !important; }
     
-    #management-btn-wrapper { bottom: max(20px, var(--sab)) !important; right: max(30px, var(--sar)) !important; width: 56px !important; height: 56px !important; }
-    #management-btn-wrapper button svg { width: 32px !important; height: 32px !important; }
+    #management-btn-wrapper { top: 50% !important; bottom: auto !important; right: max(24px, var(--sar)) !important; width: 52px !important; height: 52px !important; transform: translateY(-50%) !important; }
+    #management-btn-wrapper button svg { width: 30px !important; height: 30px !important; }
     
     .digital-date { font-size: 0.7rem !important; bottom: max(20px, var(--sab)) !important; left: max(30px, var(--sal)) !important; top: auto !important; }
     #audio-control-btn { top: max(20px, var(--sat)) !important; right: max(30px, var(--sar)) !important; width: 36px !important; height: 36px !important; }
