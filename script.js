@@ -565,10 +565,14 @@ async function init() {
         scene.add(new THREE.AmbientLight(0xffffff, 0.7));
         const L2 = new THREE.DirectionalLight(0xffffff, 0.8); L2.position.set(10, 20, 10); scene.add(L2);
         
-        // 5개 카테고리별 원통 3D 메시 생성 및 씬에 추가
+        // 5개 카테고리별 원통 3D 메시 생성 및 씬에 추가 (병렬 처리로 속도 최적화)
+        const cylinderPromises = [];
         for (let i = 0; i < CATEGORIES.length; i++) {
-            const cyl = await createCylinderMesh(i); scene.add(cyl.group);
+            cylinderPromises.push(createCylinderMesh(i));
         }
+        const createdCylinders = await Promise.all(cylinderPromises);
+        createdCylinders.forEach(cyl => scene.add(cyl.group));
+        
         await loadEverything();
     } catch (error) { 
         logDebug('❌ INIT FAIL: ' + error.message); 
@@ -724,17 +728,23 @@ async function loadEverything() {
         dataToLoad.rotations = window.EMBEDDED_DATA.rotations;
     }
     
-    // 원통 텍스처 및 각도 데이터 적용
+    // 원통 텍스처 및 각도 데이터 적용 (병렬 처리로 속도 최적화)
     const currentRots = dataToLoad.rotations || [];
+    const texturePromises = [];
+    
     for (let i = 0; i < CATEGORIES.length; i++) {
-        await updateCylinderTexture(i);
-        if (currentRots[i] !== undefined) {
-            cylinders[i].targetRotation = currentRots[i];
-            cylinders[i].currentAngle = currentRots[i];
-            cylinders[i].flatReferenceAngle = currentRots[i];
-            cylinders[i].group.rotation.y = currentRots[i];
-        }
+        texturePromises.push((async () => {
+            await updateCylinderTexture(i);
+            if (currentRots[i] !== undefined) {
+                cylinders[i].targetRotation = currentRots[i];
+                cylinders[i].currentAngle = currentRots[i];
+                cylinders[i].flatReferenceAngle = currentRots[i];
+                cylinders[i].group.rotation.y = currentRots[i];
+            }
+        })());
     }
+    
+    await Promise.all(texturePromises);
     
     updateTopCarousel(); 
     createUI();
