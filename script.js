@@ -43,7 +43,10 @@ let pointerStartTime = 0, pointerStartPos = { x: 0, y: 0 };
 // 원통 배치 및 회전 정밀도 파라미터
 const ITEM_COUNT = 20;                             // 원통 1개당 배치되는 패션 아이템 슬롯 개수 (20개)
 const CYLINDER_RADIUS = 1.0;                       // 3D 원통 반경
-let isLocked = false;                              // 전시 모드(Locked Mode) 잠금 여부
+let isLocked = /Mobile|Android|iPhone|iPad/i.test(navigator.userAgent); // 모바일 환경에서는 기본적으로 전시 모드(Locked Mode)
+if (isLocked && typeof window !== 'undefined') {
+    window.addEventListener('DOMContentLoaded', () => document.body.classList.add('mode-locked'));
+}
 const SLOT_WIDTH = (2 * Math.PI * CYLINDER_RADIUS) / ITEM_COUNT; // 1개 아이템 슬롯 호의 길이
 const ROTATION_STEP = (Math.PI * 2) / ITEM_COUNT;  // 아이템 1개당 회전 각도 (18도)
 
@@ -539,10 +542,10 @@ async function init() {
         camera.position.set(0, 0, getCameraDistance(0)); // 카메라 기본 거리 설정 (모바일/PC 반응형 자동 계산)
         
         // alpha: false 및 mediump 셰이더 연산으로 Mali GPU 처리량 극대화
-        renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: "high-performance", precision: "mediump" }); 
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance", precision: "mediump" }); 
         renderer.setSize(window.innerWidth, window.innerHeight); 
-        const isLowEndDevice = /webOS|SmartTV|Mobile|Android|iPhone|iPad/i.test(navigator.userAgent);
-        // 스탠바이미(FHD 1080p)는 1.0으로 1:1 선명한 네이티브 화질 완벽 유지, PC는 최대 2.0 고해상도 지원
+        const isLowEndDevice = /webOS|SmartTV/i.test(navigator.userAgent);
+        // 스탠바이미(FHD 1080p)는 1.0으로 1:1 선명한 네이티브 화질 완벽 유지, 모바일 및 PC는 최대 2.0 고해상도 지원
         renderer.setPixelRatio(isLowEndDevice ? 1.0 : Math.min(window.devicePixelRatio || 1, 2.0)); 
         const canvasContainer = document.getElementById('canvas-container');
         if (canvasContainer) {
@@ -571,7 +574,7 @@ async function init() {
         camera.aspect = window.innerWidth / window.innerHeight; 
         camera.updateProjectionMatrix(); 
         renderer.setSize(window.innerWidth, window.innerHeight); 
-        const isLowEndDevice = /webOS|SmartTV|Mobile|Android|iPhone|iPad/i.test(navigator.userAgent);
+        const isLowEndDevice = /webOS|SmartTV/i.test(navigator.userAgent);
         renderer.setPixelRatio(isLowEndDevice ? 1.0 : Math.min(window.devicePixelRatio || 1, 2.0));
     };
     window.addEventListener('resize', handleViewportResize);

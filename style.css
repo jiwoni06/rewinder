@@ -1558,12 +1558,12 @@ canvas {
     }
 
     .ui-overlay img {
-        width: 120px !important;
-        margin-bottom: 8px !important;
+        width: 160px !important;
+        margin-bottom: 12px !important;
     }
 
     .title-svg-interactive {
-        width: 175px !important;
+        width: 220px !important;
         max-width: 100% !important;
         height: auto !important;
     }
@@ -1637,28 +1637,26 @@ canvas {
     }
 
     .side-style-item {
-        font-size: 0.78rem;
+        font-size: 0.85rem;
         font-weight: 700;
-        padding: 7px 15px;
-        background: rgba(255, 255, 255, 0.14);
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        border-radius: 9999px;
-        color: rgba(255, 255, 255, 0.78);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        padding: 7px 10px;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.5);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
         flex-shrink: 0;
     }
 
     .side-style-item.active {
-        background: #fafaf8 !important;
-        color: #000000 !important;
+        background: transparent !important;
+        color: #fafaf8 !important;
         font-weight: 900 !important;
-        font-size: 0.82rem !important;
-        border-color: #fafaf8 !important;
-        box-shadow: 0 4px 14px rgba(255, 255, 255, 0.35);
-        transform: scale(1.05);
+        font-size: 0.95rem !important;
+        border: none !important;
+        box-shadow: none;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        transform: scale(1.1);
     }
 
     /* 5. 하단 셔플 & 2D 전환 컨트롤 버튼 그룹 */
@@ -1672,22 +1670,22 @@ canvas {
 
     .controls a img,
     .controls button img {
-        width: 44px;
-        height: 44px;
+        width: 60px;
+        height: 60px;
     }
 
     /* 6. 우측 하단 갤러리/관리 토글 버튼 */
     #management-btn-wrapper {
         bottom: max(16px, var(--sab));
         right: max(16px, var(--sar));
-        width: 44px;
-        height: 44px;
+        width: 56px;
+        height: 56px;
         z-index: 300;
     }
 
     #management-btn-wrapper button svg {
-        width: 28px;
-        height: 28px;
+        width: 36px;
+        height: 36px;
     }
 
     /* 7. 갤러리(ARCHIVE STUDIO) 관리 모달 패널 모바일 전체화면 */
