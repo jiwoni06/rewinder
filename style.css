@@ -1818,28 +1818,35 @@ canvas {
 
 /* 15. 모바일 가로 모드 (Landscape) - UI 요소 축소하여 원형 겹침 방지 */
 @media (max-height: 500px) and (orientation: landscape) {
-    .ui-overlay { top: 10px !important; left: 10px !important; }
+    .ui-overlay { top: max(10px, var(--sat)) !important; left: max(24px, var(--sal)) !important; }
     .ui-overlay img { width: 90px !important; margin-bottom: 4px !important; }
     .title-svg-interactive { width: 140px !important; }
     
     #side-style-wrapper { 
-        top: 90px !important;
-        transform: scale(0.65) !important; 
-        transform-origin: top left !important; 
-        left: 10px !important; 
+        top: max(60px, var(--sat) + 50px) !important;
+        left: max(24px, var(--sal)) !important;
+        transform: none !important;
     }
     
-    .side-style-item { font-size: 0.55rem !important; padding: 2px 6px !important; }
-    .side-style-item.active { font-size: 0.65rem !important; }
+    .side-style-header { display: none !important; }
+    .side-style-container {
+        max-height: calc(100vh - 100px) !important;
+        overflow-y: auto !important;
+        padding-bottom: 20px !important;
+        pointer-events: auto !important;
+    }
     
-    .controls { bottom: 10px !important; gap: 10px !important; }
-    .controls a img, .controls button img { width: 40px !important; height: 40px !important; }
+    .side-style-item { font-size: 0.65rem !important; padding: 4px 0 !important; }
+    .side-style-item.active { font-size: 0.75rem !important; }
     
-    #management-btn-wrapper { bottom: 10px !important; right: 10px !important; width: 40px !important; height: 40px !important; }
-    #management-btn-wrapper button svg { width: 26px !important; height: 26px !important; }
+    .controls { bottom: max(12px, var(--sab)) !important; gap: 16px !important; }
+    .controls a img, .controls button img { width: 64px !important; height: 64px !important; }
     
-    .digital-date { font-size: 0.65rem !important; bottom: 10px !important; left: 10px !important; top: auto !important; }
-    #audio-control-btn { top: 10px !important; right: 10px !important; width: 32px !important; height: 32px !important; }
+    #management-btn-wrapper { bottom: max(12px, var(--sab)) !important; right: max(24px, var(--sar)) !important; width: 56px !important; height: 56px !important; }
+    #management-btn-wrapper button svg { width: 32px !important; height: 32px !important; }
+    
+    .digital-date { font-size: 0.7rem !important; bottom: max(12px, var(--sab)) !important; left: max(24px, var(--sal)) !important; top: auto !important; }
+    #audio-control-btn { top: max(12px, var(--sat)) !important; right: max(24px, var(--sar)) !important; width: 44px !important; height: 44px !important; }
 
     #info-title { font-size: 11px !important; margin-bottom: 2px !important; }
     #info-desc { font-size: 8px !important; line-height: 1.2 !important; }
