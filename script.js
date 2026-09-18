@@ -516,10 +516,15 @@ function getCylinderHeight(index) {
 function getCameraDistance(t = (typeof flattenProgress !== 'undefined' ? flattenProgress : 0)) {
     const aspect = window.innerWidth / window.innerHeight;
     let aspectMultiplier = 1.0;
-    if (aspect < 1.4) {
+    const isIPad = /iPad/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    if (aspect < 1.4 && !isIPad) {
         // 스마트폰 세로 모드(aspect < 1.4)에서 텍스트와 겹치지 않게 적절히 큼직하도록 비례 조정 (기존 0.95 -> 0.55)
         aspectMultiplier = (1.4 / aspect) * 0.55;
         aspectMultiplier = Math.max(1.0, Math.min(aspectMultiplier, 2.5));
+    } else if (isIPad) {
+        // 아이패드에서는 원통 크기를 줄여 다른 요소에 가리지 않게 (카메라 거리를 멀게)
+        aspectMultiplier = 1.35;
     }
     const baseCamZ = (3.0 * (1 - t) + 3.2 * t) * aspectMultiplier;
     return baseCamZ;
@@ -1128,7 +1133,7 @@ async function updateCylinderTexture(index) {
     else if (index === 4) hVal = 7.0;
     const hRatio = hVal / 16; 
     // 1080p 화면 전용 1:1 픽셀 매핑 최적 해상도 향상 (4096px) - 과도한 부하 없이 선명도 개선
-    const maxTextureCap = (renderer && renderer.capabilities) ? Math.min(4096, renderer.capabilities.maxTextureSize) : 4096;
+    const maxTextureCap = (renderer && renderer.capabilities) ? Math.min(8192, renderer.capabilities.maxTextureSize) : 8192;
     const MAX_WIDTH = maxTextureCap; 
     const categoryItems = CATEGORIES[index].items;
     
