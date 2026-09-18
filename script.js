@@ -533,18 +533,7 @@ async function init() {
         
         // 스탠바이미 최적화: alpha: false를 지원하기 위해 Three.js 씬 배경에 동일한 방사형 그라데이션 직접 렌더링
         // 이로 인해 webOS 브라우저의 소프트웨어 알파 컴포지팅 부하를 100% 제거하고 하드웨어 다이렉트 플레인 활성화
-        const bgCanvas = document.createElement('canvas');
-        bgCanvas.width = 256;
-        bgCanvas.height = 256;
-        const bgCtx = bgCanvas.getContext('2d');
-        const grad = bgCtx.createRadialGradient(128, 128, 0, 128, 128, 128);
-        grad.addColorStop(0, '#1a1c20');
-        grad.addColorStop(0.6, '#0a0b0d');
-        grad.addColorStop(1, '#050505');
-        bgCtx.fillStyle = grad;
-        bgCtx.fillRect(0, 0, 256, 256);
-        const bgTexture = new THREE.CanvasTexture(bgCanvas);
-        scene.background = bgTexture;
+        scene.background = new THREE.Color('#111111');
 
         camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000); 
         camera.position.set(0, 0, getCameraDistance(0)); // 카메라 기본 거리 설정 (모바일/PC 반응형 자동 계산)
@@ -565,19 +554,15 @@ async function init() {
         scene.add(new THREE.AmbientLight(0xffffff, 0.7));
         const L2 = new THREE.DirectionalLight(0xffffff, 0.8); L2.position.set(10, 20, 10); scene.add(L2);
         
-        // 5개 카테고리별 원통 3D 메시 생성 및 씬에 추가 (병렬 처리로 속도 최적화)
-        const cylinderPromises = [];
+        // 5개 카테고리별 원통 3D 메시 생성 및 씬에 추가
         for (let i = 0; i < CATEGORIES.length; i++) {
-            cylinderPromises.push(createCylinderMesh(i));
+            const cyl = await createCylinderMesh(i); scene.add(cyl.group);
         }
-        const createdCylinders = await Promise.all(cylinderPromises);
-        createdCylinders.forEach(cyl => scene.add(cyl.group));
-        
         await loadEverything();
     } catch (error) { 
         logDebug('❌ INIT FAIL: ' + error.message); 
     } finally { 
-        setTimeout(hideLoader, 100); 
+        setTimeout(hideLoader, 1500); 
     }
     
     // 리사이즈 및 화면 회전(가로/세로 전환) 이벤트 대응
@@ -728,23 +713,17 @@ async function loadEverything() {
         dataToLoad.rotations = window.EMBEDDED_DATA.rotations;
     }
     
-    // 원통 텍스처 및 각도 데이터 적용 (병렬 처리로 속도 최적화)
+    // 원통 텍스처 및 각도 데이터 적용
     const currentRots = dataToLoad.rotations || [];
-    const texturePromises = [];
-    
     for (let i = 0; i < CATEGORIES.length; i++) {
-        texturePromises.push((async () => {
-            await updateCylinderTexture(i);
-            if (currentRots[i] !== undefined) {
-                cylinders[i].targetRotation = currentRots[i];
-                cylinders[i].currentAngle = currentRots[i];
-                cylinders[i].flatReferenceAngle = currentRots[i];
-                cylinders[i].group.rotation.y = currentRots[i];
-            }
-        })());
+        await updateCylinderTexture(i);
+        if (currentRots[i] !== undefined) {
+            cylinders[i].targetRotation = currentRots[i];
+            cylinders[i].currentAngle = currentRots[i];
+            cylinders[i].flatReferenceAngle = currentRots[i];
+            cylinders[i].group.rotation.y = currentRots[i];
+        }
     }
-    
-    await Promise.all(texturePromises);
     
     updateTopCarousel(); 
     createUI();
@@ -1195,7 +1174,7 @@ async function updateCylinderTexture(index) {
                 }
                 
                 // 카드 배경 및 클리핑
-                ctx.fillStyle = "#ffffff";
+                ctx.fillStyle = "#fafaf8";
                 ctx.fill();
                 ctx.clip();
 
