@@ -920,10 +920,10 @@ window.toggleFlatView = function() {
     if (btn) {
         if (isFlatView) {
             btn.classList.add('active');
-            btn.innerHTML = '<img src="./asset/cylinder.svg" alt="CYLINDER" style="pointer-events: none;">';
+            btn.innerHTML = '<img src="./asset/cylinder.svg?v=2" alt="CYLINDER" style="pointer-events: none;">';
         } else {
             btn.classList.remove('active');
-            btn.innerHTML = '<img src="./asset/flat.svg" alt="FLAT" style="pointer-events: none;">';
+            btn.innerHTML = '<img src="./asset/flat.svg?v=2" alt="FLAT" style="pointer-events: none;">';
         }
     }
 };
@@ -2495,14 +2495,14 @@ window.addEventListener('beforeunload', () => {
 });
 
 // ==========================================================================
-// 3분 유휴 상태 시 메인 화면으로 복귀 (Idle Timer)
+// 1분 유휴 상태 시 메인 화면으로 복귀 (Idle Timer)
 // ==========================================================================
 let globalIdleTimer = null;
 function resetGlobalIdleTimer() {
     if (globalIdleTimer) clearTimeout(globalIdleTimer);
     globalIdleTimer = setTimeout(() => {
         returnToMainScreen();
-    }, 180000); // 3분 = 180,000ms
+    }, 60000); // 1분 = 60,000ms
 }
 
 function returnToMainScreen() {
