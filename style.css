@@ -1776,6 +1776,13 @@ canvas {
         min-height: 0 !important;
     }
 
+    #info-title { font-size: 14px !important; margin-bottom: 2px !important; }
+    #info-desc { font-size: 11px !important; line-height: 1.4 !important; }
+    .info-tag { font-size: 11px !important; height: 32px !important; padding: 0 10px !important; }
+    .info-body { padding: 3% !important; }
+    .info-header { padding: 3% !important; }
+    .info-title-container { padding: 3% !important; }
+
     /* 9. 온보딩 이용 안내 모달 */
     .instruction-card {
         width: 90vw !important;
@@ -1816,17 +1823,28 @@ canvas {
     .title-svg-interactive { width: 140px !important; }
     
     #side-style-wrapper { 
-        transform: translateY(-50%) scale(0.65) !important; 
-        transform-origin: left center !important; 
+        top: 70px !important;
+        transform: scale(0.65) !important; 
+        transform-origin: top left !important; 
         left: 10px !important; 
     }
     
-    .controls { bottom: 10px !important; gap: 10px !important; }
-    .controls a img, .controls button img { width: 44px !important; height: 44px !important; }
+    .side-style-item { font-size: 0.65rem !important; padding: 4px 8px !important; }
+    .side-style-item.active { font-size: 0.75rem !important; }
     
-    #management-btn-wrapper { bottom: 10px !important; right: 10px !important; width: 44px !important; height: 44px !important; }
-    #management-btn-wrapper button svg { width: 28px !important; height: 28px !important; }
+    .controls { bottom: 10px !important; gap: 10px !important; }
+    .controls a img, .controls button img { width: 40px !important; height: 40px !important; }
+    
+    #management-btn-wrapper { bottom: 10px !important; right: 10px !important; width: 40px !important; height: 40px !important; }
+    #management-btn-wrapper button svg { width: 26px !important; height: 26px !important; }
     
     .digital-date { font-size: 0.65rem !important; bottom: 10px !important; left: 10px !important; top: auto !important; }
-    #audio-control-btn { top: 10px !important; right: 10px !important; width: 36px !important; height: 36px !important; }
+    #audio-control-btn { top: 10px !important; right: 10px !important; width: 32px !important; height: 32px !important; }
+
+    #info-title { font-size: 13px !important; }
+    #info-desc { font-size: 10px !important; line-height: 1.3 !important; }
+    .info-tag { font-size: 10px !important; height: 28px !important; padding: 0 8px !important; }
+    .info-body { padding: 2% !important; }
+    .info-header { padding: 2% !important; }
+    .info-title-container { padding: 2% !important; }
 }
