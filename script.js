@@ -832,7 +832,6 @@ function animate(time) {
                     geo.computeBoundingSphere();
                     geo.computeBoundingBox();
                 }
-                posAttr.needsUpdate = true;
             }
         }
     });
