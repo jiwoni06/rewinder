@@ -573,7 +573,7 @@ async function init() {
     } catch (error) { 
         logDebug('❌ INIT FAIL: ' + error.message); 
     } finally { 
-        setTimeout(hideLoader, 1000); 
+        setTimeout(hideLoader, 100); 
     }
     
     // 리사이즈 및 화면 회전(가로/세로 전환) 이벤트 대응
