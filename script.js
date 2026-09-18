@@ -43,6 +43,7 @@ let pointerStartTime = 0, pointerStartPos = { x: 0, y: 0 };
 // 원통 배치 및 회전 정밀도 파라미터
 const ITEM_COUNT = 20;                             // 원통 1개당 배치되는 패션 아이템 슬롯 개수 (20개)
 const CYLINDER_RADIUS = 1.0;                       // 3D 원통 반경
+const isIPad = /iPad/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 let isLocked = /Mobile|Android|iPhone|iPad/i.test(navigator.userAgent); // 모바일 환경에서는 기본적으로 전시 모드(Locked Mode)
 if (isLocked && typeof window !== 'undefined') {
     window.addEventListener('DOMContentLoaded', () => document.body.classList.add('mode-locked'));
@@ -516,17 +517,18 @@ function getCylinderHeight(index) {
 function getCameraDistance(t = (typeof flattenProgress !== 'undefined' ? flattenProgress : 0)) {
     const aspect = window.innerWidth / window.innerHeight;
     let aspectMultiplier = 1.0;
-    const isIPad = /iPad/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    
     if (aspect < 1.4 && !isIPad) {
         // 스마트폰 세로 모드(aspect < 1.4)에서 텍스트와 겹치지 않게 적절히 큼직하도록 비례 조정 (기존 0.95 -> 0.55)
         aspectMultiplier = (1.4 / aspect) * 0.55;
         aspectMultiplier = Math.max(1.0, Math.min(aspectMultiplier, 2.5));
-    } else if (isIPad) {
-        // 아이패드에서는 원통 크기를 줄여 다른 요소에 가리지 않게 (카메라 거리를 멀게)
-        aspectMultiplier = 1.35;
     }
-    const baseCamZ = (3.0 * (1 - t) + 3.2 * t) * aspectMultiplier;
+    let baseCamZ = (3.0 * (1 - t) + 3.2 * t) * aspectMultiplier;
+    
+    if (isIPad) {
+        // 아이패드에서는 원통 크기가 90%로 작아지도록 카메라 거리를 늘려줌
+        baseCamZ = baseCamZ / 0.9;
+    }
+    
     return baseCamZ;
 }
 
@@ -1133,7 +1135,8 @@ async function updateCylinderTexture(index) {
     else if (index === 4) hVal = 7.0;
     const hRatio = hVal / 16; 
     // 1080p 화면 전용 1:1 픽셀 매핑 최적 해상도 향상 (4096px) - 과도한 부하 없이 선명도 개선
-    const maxTextureCap = (renderer && renderer.capabilities) ? Math.min(8192, renderer.capabilities.maxTextureSize) : 8192;
+    let defaultTextureCap = isIPad ? 8192 : 4096; // 아이패드 화질 향상
+    const maxTextureCap = (renderer && renderer.capabilities) ? Math.min(defaultTextureCap, renderer.capabilities.maxTextureSize) : defaultTextureCap;
     const MAX_WIDTH = maxTextureCap; 
     const categoryItems = CATEGORIES[index].items;
     
@@ -2432,6 +2435,15 @@ function toggleFullScreen() {
         else if (document.msExitFullscreen) document.msExitFullscreen();
     }
 }
+
+['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(
+    eventType => document.addEventListener(eventType, () => {
+        const isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        if (isIPad) {
+            document.body.classList.toggle('ipad-fullscreen', isFullScreen);
+        }
+    })
+);
 
 let consecutiveClicks = 0;
 let clickTimer = null;

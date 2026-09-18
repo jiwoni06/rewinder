@@ -1536,7 +1536,7 @@ canvas {
 .digital-date {
     position: fixed;
     bottom: 40px;
-    left: 40px;
+    left: 20px;
     font-size: 1.2rem;
     font-weight: bold;
     color: #fafaf8;
@@ -1549,7 +1549,7 @@ canvas {
    14. 스마트폰 및 모바일 태블릿 반응형 레이아웃 시스템 (Mobile Responsive)
    ========================================================================== */
 
-@media (max-width: 767px) and (orientation: portrait) {
+@media (max-width: 768px) and (orientation: portrait) {
     /* 1. 상단 브랜드 헤더 (로고 및 인터랙티브 REWINDER 타이틀 축소 & Safe Area 적용) */
     .ui-overlay {
         top: max(14px, var(--sat));
