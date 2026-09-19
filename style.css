@@ -131,6 +131,11 @@ h3 {
 }
 
 /* 화면 좌우 어두운 가장자리 비네팅(Vignette) 가림막 */
+
+/* 아이패드 전체화면 시 Safari/Chrome 제스처(쓸어내림 등) 원천 차단 */
+body.ipad-fullscreen {
+    touch-action: none !important;
+}
 #vignette-overlay {
     position: fixed;
     top: 0;
@@ -425,6 +430,7 @@ h3 {
 
 /* 내부 스크롤 영역 (큰 네모 안쪽에 항상 선명하게 표시되는 세로 스크롤바) */
 .archive-scroll-area {
+    touch-action: pan-y;
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
