@@ -2445,6 +2445,19 @@ function toggleFullScreen() {
     })
 );
 
+// iPad에서 전체화면일 때 쓸어내림(Swipe Down)으로 인해 전체화면이 해제되는 것을 방지
+document.addEventListener('touchmove', (e) => {
+    const isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    if (isIPad && isFullScreen) {
+        // 스크롤이 필요한 영역(아카이브 스크롤, 스타일 칩 바)은 예외 처리
+        const isScrollable = e.target.closest('.archive-scroll-area') || e.target.closest('.side-style-container');
+        if (!isScrollable) {
+            // 캔버스 등에서 쓸어내리는 기본 터치 동작(전체화면 해제/Safari UI 호출 등) 방지
+            e.preventDefault();
+        }
+    }
+}, { passive: false });
+
 let consecutiveClicks = 0;
 let clickTimer = null;
 window.addEventListener('click', (e) => {
