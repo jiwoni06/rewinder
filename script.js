@@ -636,7 +636,7 @@ window.addEventListener('wheel', (e) => {
         const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
         const sensitivity = isFlatView ? -0.0035 : 0.0035;
         cylinders[targetCat].targetRotation += delta * sensitivity;
-        pauseAutoDuration = 3000;
+        pauseAutoDuration = 10000;
     }
 }, { passive: true });
 
@@ -918,10 +918,10 @@ window.toggleFlatView = function() {
     if (btn) {
         if (isFlatView) {
             btn.classList.add('active');
-            btn.innerHTML = '<img src="./asset/cylinder.svg?v=2" alt="CYLINDER" style="pointer-events: none;">';
+            btn.innerHTML = '<img src="./cylinder.svg?v=2" alt="CYLINDER" style="pointer-events: none;">';
         } else {
             btn.classList.remove('active');
-            btn.innerHTML = '<img src="./asset/flat.svg?v=2" alt="FLAT" style="pointer-events: none;">';
+            btn.innerHTML = '<img src="./flat.svg?v=2" alt="FLAT" style="pointer-events: none;">';
         }
     }
 };
@@ -1244,7 +1244,7 @@ function onPointerDown(e) {
             activeCylinderIndex = catId;
             isDragging = true; 
             hasDragged = false;
-            pauseAutoDuration = 3000;
+            pauseAutoDuration = 10000;
             dragStartX = e.clientX; 
             dragStartRotation = cylinders[activeCylinderIndex].targetRotation; 
             dragStartRotations = cylinders.map(c => c ? c.targetRotation : 0);
@@ -1364,7 +1364,7 @@ function onPointerUp(e) {
     isHovering = false;
     hoveredCylinderIndex = -1;
     if (activeCylinderIndex !== -1) {
-        pauseAutoDuration = 3000;
+        pauseAutoDuration = 10000;
     }
     activeCylinderIndex = -1;
 }
@@ -1444,6 +1444,37 @@ window.addEventListener('pointerdown', (e) => {
     }
 });
 
+window.updateTimelineArrows = () => {
+    const list = document.getElementById('side-style-list');
+    if (!list) return;
+    const containers = list.querySelectorAll('.timeline-container');
+    for (let i = 0; i < containers.length - 1; i++) {
+        const current = containers[i];
+        const next = containers[i + 1];
+        const arrow = current.querySelector('.timeline-arrow-line');
+        if (arrow) {
+            const currentItem = current.closest('.side-style-item');
+            const nextItem = next.closest('.side-style-item');
+            if (currentItem && nextItem) {
+                const rect1 = currentItem.getBoundingClientRect();
+                const rect2 = nextItem.getBoundingClientRect();
+                const center1 = rect1.top + rect1.height / 2;
+                const center2 = rect2.top + rect2.height / 2;
+                const distance = center2 - center1;
+                
+                // We want equal margins. Arrowhead is 6px.
+                // Let's set a fixed margin of 18px from top and bottom text centers.
+                const topMargin = 18;
+                const desiredHeight = distance - (topMargin * 2) - 6; // 6 is arrowhead
+                
+                // Apply inline styles to perfectly center the arrow
+                arrow.style.top = `calc(50% + ${topMargin}px)`;
+                arrow.style.height = Math.max(0, desiredHeight) + 'px';
+            }
+        }
+    }
+};
+
 window.updateTopCarousel = () => { 
     const container = document.getElementById('side-style-container');
     const list = document.getElementById('side-style-list');
@@ -1454,13 +1485,46 @@ window.updateTopCarousel = () => {
         return;
     }
 
-    const baseHTML = STYLE_SETS.map((s, idx) => `
+    const baseHTML = STYLE_SETS.map((s, idx) => {
+        let timelineHtml = '';
+        if (s.name === '밀리터리룩') {
+            timelineHtml = `
+            <div class="timeline-container">
+                <div class="timeline-year">2010</div>
+                <div class="timeline-arrow-line" style="height: 12px;"></div>
+            </div>`;
+        } else if (s.name === '모나미룩') {
+            timelineHtml = `
+            <div class="timeline-container">
+                <div class="timeline-year">2015</div>
+                <div class="timeline-arrow-line" style="height: 80px;"></div>
+            </div>`;
+        } else if (s.name === '시티보이룩') {
+            timelineHtml = `
+            <div class="timeline-container">
+                <div class="timeline-year">2020</div>
+                <div class="timeline-arrow-line" style="height: 80px;"></div>
+            </div>`;
+        } else if (s.name === '경량패딩룩') {
+            timelineHtml = `
+            <div class="timeline-container">
+                <div class="timeline-year">2025</div>
+            </div>`;
+        }
+
+        return `
         <div class="side-style-item ${idx === 0 ? 'active' : ''}" 
              data-id="${s.id}" data-idx="${idx}">
+            ${timelineHtml}
             ${s.name}
-        </div>`).join(''); 
+        </div>`;
+    }).join(''); 
     
     list.innerHTML = baseHTML;
+    
+    setTimeout(() => {
+        if(window.updateTimelineArrows) window.updateTimelineArrows();
+    }, 50);
 
     // Attach delegated click listener to the list container
     list.onclick = (e) => {
@@ -2222,7 +2286,7 @@ window.closeInfoPopup = () => {
 };
 window.randomize = () => { 
     lastInteractionTime = Date.now(); 
-    pauseAutoDuration = 3000; 
+    pauseAutoDuration = 10000; 
     cylinders.forEach((c, cIdx) => {
         const itemCount = (CATEGORIES[cIdx] && CATEGORIES[cIdx].items && CATEGORIES[cIdx].items.length > 0) 
             ? CATEGORIES[cIdx].items.length 
@@ -2238,7 +2302,7 @@ window.randomize = () => {
     saveRotationState(); 
 };
 
-window.resetRotation = () => { lastInteractionTime = Date.now(); pauseAutoDuration = 3000; cylinders.forEach(c => c.targetRotation = 0); saveRotationState(); };
+window.resetRotation = () => { lastInteractionTime = Date.now(); pauseAutoDuration = 10000; cylinders.forEach(c => c.targetRotation = 0); saveRotationState(); };
 window.updateItemTitle = (cId, idx, val) => { CATEGORIES[cId].items[idx].title = val; saveState(); };
 window.updateItemMemo = (cId, idx, val) => { CATEGORIES[cId].items[idx].desc = val; saveState(); };
 window.updateItemLink = (cId, idx, val) => { CATEGORIES[cId].items[idx].link = val; saveState(); };
