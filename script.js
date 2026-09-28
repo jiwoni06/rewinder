@@ -904,6 +904,7 @@ function animate(time) {
 window.toggleFlatView = function() {
     isFlatView = !isFlatView;
     targetFlattenProgress = isFlatView ? 1 : 0;
+    pauseAutoDuration = 0; // 추가: 뷰 전환 시 일시정지 바로 해제
 
     if (isFlatView) {
         cylinders.forEach(c => {
