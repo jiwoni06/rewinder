@@ -1741,7 +1741,7 @@ window.showSetReference = () => {
     if (!set || !set.repUrl) { showMessage("이 스타일의 대표 이미지가 등록되지 않았습니다."); return; }
     
     document.getElementById('info-img').src = set.repUrl;
-    document.getElementById('info-category').innerText = "STYLE";
+    document.getElementById('info-category').innerText = "LOOK";
     document.getElementById('info-title').innerText = set.name;
     document.getElementById('info-desc').innerText = set.desc || "이 스타일 조합에 대한 오피셜 룩북 이미지입니다.";
     const linkBtn = document.getElementById('info-link');
@@ -2483,7 +2483,20 @@ window.closeInstructions = () => {
 window.showInstructions = () => { const o = document.getElementById('instruction-overlay'); if (o) { o.style.display = 'flex'; setTimeout(() => o.style.opacity = '1', 10); } };
 
 // Shift + L 키 입력 시 전시 모드(Locked Mode) <-> 편집 모드 전환
-window.addEventListener('keydown', (e) => { if (e.shiftKey && e.code === 'KeyL') { isLocked = !isLocked; document.body.classList.toggle('mode-locked', isLocked); showMessage(isLocked ? "전시 모드" : "편집 모드"); } });
+let tapCount = 0;
+let tapTimeout;
+window.addEventListener('pointerdown', (e) => {
+    tapCount++;
+    clearTimeout(tapTimeout);
+    if (tapCount >= 4) {
+        isLocked = !isLocked;
+        document.body.classList.toggle('mode-locked', isLocked);
+        showMessage(isLocked ? "전시 모드" : "편집 모드");
+        tapCount = 0;
+    } else {
+        tapTimeout = setTimeout(() => { tapCount = 0; }, 400);
+    }
+});
 
 function toggleFullScreen() {
     if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
