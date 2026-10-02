@@ -1610,7 +1610,7 @@ canvas {
     }
 
     .title-svg-interactive {
-        width: 220px !important;
+        width: 190px !important;
         max-width: 100% !important;
         height: auto !important;
     }
@@ -1856,7 +1856,7 @@ canvas {
         width: 100px !important;
     }
     .title-svg-interactive {
-        width: 150px !important;
+        width: 120px !important;
     }
     .controls a img,
     .controls button img {
@@ -1873,7 +1873,7 @@ canvas {
 @media (max-height: 500px) and (orientation: landscape) {
     .ui-overlay { top: max(20px, var(--sat)) !important; left: max(30px, var(--sal)) !important; }
     .ui-overlay img { width: 140px !important; margin-bottom: 6px !important; }
-    .title-svg-interactive { width: 180px !important; }
+    .title-svg-interactive { width: 150px !important; }
     
     #side-style-wrapper { 
         top: max(85px, calc(var(--sat) + 75px)) !important;

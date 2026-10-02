@@ -2481,21 +2481,7 @@ window.closeInstructions = () => {
 };
 window.showInstructions = () => { const o = document.getElementById('instruction-overlay'); if (o) { o.style.display = 'flex'; setTimeout(() => o.style.opacity = '1', 10); } };
 
-// Shift + L 키 입력 시 전시 모드(Locked Mode) <-> 편집 모드 전환
-let tapCount = 0;
-let tapTimeout;
-window.addEventListener('pointerdown', (e) => {
-    tapCount++;
-    clearTimeout(tapTimeout);
-    if (tapCount >= 4) {
-        isLocked = !isLocked;
-        document.body.classList.toggle('mode-locked', isLocked);
-        showMessage(isLocked ? "전시 모드" : "편집 모드");
-        tapCount = 0;
-    } else {
-        tapTimeout = setTimeout(() => { tapCount = 0; }, 400);
-    }
-});
+// (전체화면 기능은 왼쪽 상단 클릭 이벤트 리스너에서 처리됨)
 
 function toggleFullScreen() {
     if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
