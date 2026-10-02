@@ -1446,6 +1446,7 @@ window.addEventListener('pointerdown', (e) => {
 window.updateTimelineArrows = () => {
     const list = document.getElementById('side-style-list');
     if (!list) return;
+    const isHorizontal = window.getComputedStyle(list).flexDirection === 'row';
     const containers = list.querySelectorAll('.timeline-container');
     for (let i = 0; i < containers.length - 1; i++) {
         const current = containers[i];
@@ -1457,18 +1458,36 @@ window.updateTimelineArrows = () => {
             if (currentItem && nextItem) {
                 const rect1 = currentItem.getBoundingClientRect();
                 const rect2 = nextItem.getBoundingClientRect();
-                const center1 = rect1.top + rect1.height / 2;
-                const center2 = rect2.top + rect2.height / 2;
-                const distance = center2 - center1;
                 
-                // We want equal margins. Arrowhead is 6px.
-                // Let's set a fixed margin of 18px from top and bottom text centers.
-                const topMargin = 18;
-                const desiredHeight = distance - (topMargin * 2) - 6; // 6 is arrowhead
-                
-                // Apply inline styles to perfectly center the arrow
-                arrow.style.top = `calc(50% + ${topMargin}px)`;
-                arrow.style.height = Math.max(0, desiredHeight) + 'px';
+                if (isHorizontal) {
+                    const center1 = rect1.left + rect1.width / 2;
+                    const center2 = rect2.left + rect2.width / 2;
+                    const distance = center2 - center1;
+                    
+                    const leftMargin = 18;
+                    const desiredWidth = distance - (leftMargin * 2) - 6;
+                    
+                    arrow.classList.add('horizontal-arrow');
+                    arrow.style.top = '50%';
+                    arrow.style.left = `calc(50% + ${leftMargin}px)`;
+                    arrow.style.width = Math.max(0, desiredWidth) + 'px';
+                    arrow.style.height = '2px';
+                    arrow.style.transform = 'translateY(-50%)';
+                } else {
+                    const center1 = rect1.top + rect1.height / 2;
+                    const center2 = rect2.top + rect2.height / 2;
+                    const distance = center2 - center1;
+                    
+                    const topMargin = 18;
+                    const desiredHeight = distance - (topMargin * 2) - 6;
+                    
+                    arrow.classList.remove('horizontal-arrow');
+                    arrow.style.left = '50%';
+                    arrow.style.top = `calc(50% + ${topMargin}px)`;
+                    arrow.style.height = Math.max(0, desiredHeight) + 'px';
+                    arrow.style.width = '2px';
+                    arrow.style.transform = 'translateX(-50%)';
+                }
             }
         }
     }

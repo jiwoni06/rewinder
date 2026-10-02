@@ -228,7 +228,7 @@ body.ipad-fullscreen {
     overflow-y: visible;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    padding: 10px 20px 10px 0;
+    padding: 10px 20px 10px 60px;
     touch-action: auto;
     max-width: 100%;
     pointer-events: auto; /* Ensure container receives clicks and scrolls */
@@ -244,7 +244,7 @@ body.ipad-fullscreen {
     gap: 4px; /* Reduced from 12px */
     position: relative;
     width: max-content;
-    margin-left: 60px; /* Added to make room for timeline years */
+    /* margin-left removed, moved to padding on container to prevent landscape clipping */
 }
 
 .side-style-item {
@@ -312,6 +312,14 @@ body.ipad-fullscreen {
     border-width: 6px 5px 0;
     border-style: solid;
     border-color: #fafaf8 transparent transparent transparent;
+}
+
+.timeline-arrow-line.horizontal-arrow::after {
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-width: 5px 0 5px 6px;
+    border-color: transparent transparent transparent #fafaf8;
 }
 
 .ui-overlay {
@@ -1661,7 +1669,7 @@ canvas {
         max-height: none;
         overflow-x: auto;
         overflow-y: hidden;
-        padding: 6px 0;
+        padding: 25px 0 6px 0;
         touch-action: pan-x;
         pointer-events: auto;
         -webkit-overflow-scrolling: touch;
@@ -1685,7 +1693,16 @@ canvas {
     }
 
     .timeline-container {
-        display: none;
+        display: flex;
+        position: absolute;
+        top: -20px;
+        left: 0;
+        right: 0;
+        bottom: auto;
+        width: 100%;
+        height: 20px;
+        justify-content: center;
+        align-items: center;
     }
 
     .side-style-item {
