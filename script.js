@@ -2537,26 +2537,34 @@ document.addEventListener('touchmove', (e) => {
 let consecutiveClicks = 0;
 let clickTimer = null;
 window.addEventListener('click', (e) => {
-    consecutiveClicks++;
-    if (clickTimer) clearTimeout(clickTimer);
+    // 왼쪽 상단 영역인지 확인 (예: x <= 100, y <= 100)
+    const isTopLeft = e.clientX <= 100 && e.clientY <= 100;
     
-    if (consecutiveClicks >= 4) {
-        consecutiveClicks = 0;
-        const isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    if (isTopLeft) {
+        consecutiveClicks++;
+        if (clickTimer) clearTimeout(clickTimer);
         
-        toggleFullScreen();
-        
-        if (!isFullScreen) {
-            isLocked = true;
-            document.body.classList.toggle('mode-locked', isLocked);
-            if (typeof showMessage === 'function') showMessage("전시 모드");
+        if (consecutiveClicks >= 4) {
+            consecutiveClicks = 0;
+            const isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            
+            toggleFullScreen();
+            
+            if (!isFullScreen) {
+                isLocked = true;
+                document.body.classList.toggle('mode-locked', isLocked);
+                if (typeof showMessage === 'function') showMessage("전시 모드");
+            } else {
+                isLocked = false;
+                document.body.classList.toggle('mode-locked', isLocked);
+                if (typeof showMessage === 'function') showMessage("편집 모드");
+            }
         } else {
-            isLocked = false;
-            document.body.classList.toggle('mode-locked', isLocked);
-            if (typeof showMessage === 'function') showMessage("편집 모드");
+            clickTimer = setTimeout(() => { consecutiveClicks = 0; }, 400);
         }
     } else {
-        clickTimer = setTimeout(() => { consecutiveClicks = 0; }, 400);
+        consecutiveClicks = 0;
+        if (clickTimer) clearTimeout(clickTimer);
     }
 });
 
