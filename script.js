@@ -2522,9 +2522,14 @@ document.addEventListener('touchmove', (e) => {
 
 let consecutiveClicks = 0;
 let clickTimer = null;
-window.addEventListener('click', (e) => {
-    // 왼쪽 상단 영역인지 확인 (예: x <= 100, y <= 100)
-    const isTopLeft = e.clientX <= 100 && e.clientY <= 100;
+window.addEventListener('pointerup', (e) => {
+    // 터치 디스플레이(스탠바이미 등)에서 정확한 좌표 처리를 위해 pointerup 사용
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    // 좌표가 유효한지 확인하고 왼쪽 상단인지 검사 (0,0인 비정상적인 합성 이벤트 방지)
+    const isValidCoord = x !== 0 || y !== 0; 
+    const isTopLeft = isValidCoord && x <= 100 && y <= 100;
     
     if (isTopLeft) {
         consecutiveClicks++;
