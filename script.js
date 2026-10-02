@@ -547,12 +547,11 @@ async function init() {
         camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000); 
         camera.position.set(0, 0, getCameraDistance(0)); // 카메라 기본 거리 설정 (모바일/PC 반응형 자동 계산)
         
-        // alpha: false 및 mediump 셰이더 연산으로 Mali GPU 처리량 극대화
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance", precision: "mediump" }); 
+        // 고해상도 렌더링 및 텍스처 정밀도 유지를 위해 highp 정밀도 적용
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance", precision: "highp" }); 
         renderer.setSize(window.innerWidth, window.innerHeight); 
-        const isLowEndDevice = /webOS|SmartTV/i.test(navigator.userAgent);
-        // 스탠바이미(FHD 1080p)는 1.0으로 1:1 선명한 네이티브 화질 완벽 유지, 모바일 및 PC는 최대 2.0 고해상도 지원
-        renderer.setPixelRatio(isLowEndDevice ? 1.0 : Math.min(window.devicePixelRatio || 1, 2.0)); 
+        // 스탠바이미(webOS) 및 고해상도 디스플레이의 디바이스 픽셀 비율(DPR)을 온전히 반영하여 1:1 선명한 네이티브 화질 유지
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0)); 
         const canvasContainer = document.getElementById('canvas-container');
         if (canvasContainer) {
             canvasContainer.innerHTML = '';
@@ -580,8 +579,7 @@ async function init() {
         camera.aspect = window.innerWidth / window.innerHeight; 
         camera.updateProjectionMatrix(); 
         renderer.setSize(window.innerWidth, window.innerHeight); 
-        const isLowEndDevice = /webOS|SmartTV/i.test(navigator.userAgent);
-        renderer.setPixelRatio(isLowEndDevice ? 1.0 : Math.min(window.devicePixelRatio || 1, 2.0));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
     };
     window.addEventListener('resize', handleViewportResize);
     window.addEventListener('orientationchange', () => {
@@ -943,8 +941,8 @@ async function createCylinderMesh(index) {
     
     group.position.y = yPos;
     
-    // 원통 3D 지오메트리 세그먼트 생성 (스탠바이미 최적화: 32 세그먼트로 매끄러운 곡면 유지 & 버텍스 연산 대폭 절감)
-    const geo = new THREE.CylinderGeometry(CYLINDER_RADIUS, CYLINDER_RADIUS, h, 32, 1, true);
+    // 원통 3D 지오메트리 세그먼트 생성 (슬롯당 3분할 = 60 세그먼트로 왜곡 없는 완벽한 곡면 및 매끄러운 텍스처 매핑)
+    const geo = new THREE.CylinderGeometry(CYLINDER_RADIUS, CYLINDER_RADIUS, h, 60, 1, true);
     
     // 3D 원통 원래 정점 위치와 2D 평면 정점 위치 데이터 구조 저장
     const posAttr = geo.attributes.position;
@@ -1135,8 +1133,8 @@ async function updateCylinderTexture(index) {
     else if (index === 3) hVal = 22.0;
     else if (index === 4) hVal = 7.0;
     const hRatio = hVal / 16; 
-    // 1080p 화면 전용 1:1 픽셀 매핑 최적 해상도 향상 (4096px) - 과도한 부하 없이 선명도 개선
-    let defaultTextureCap = isIPad ? 8192 : 4096; // 아이패드 화질 향상
+    // 스탠바이미(27인치 대화면) 및 고해상도 환경에서 또렷한 화질을 위해 기본 8192px 적용 (슬롯당 410px 고화질)
+    const defaultTextureCap = 8192;
     const maxTextureCap = (renderer && renderer.capabilities) ? Math.min(defaultTextureCap, renderer.capabilities.maxTextureSize) : defaultTextureCap;
     const MAX_WIDTH = maxTextureCap; 
     const categoryItems = CATEGORIES[index].items;
@@ -1202,8 +1200,8 @@ async function updateCylinderTexture(index) {
     }
     
     const tex = new THREE.CanvasTexture(canvas); 
-    const maxAnisotropy = (renderer && renderer.capabilities) ? renderer.capabilities.getMaxAnisotropy() : 4;
-    tex.anisotropy = Math.min(4, maxAnisotropy);
+    const maxAnisotropy = (renderer && renderer.capabilities) ? renderer.capabilities.getMaxAnisotropy() : 16;
+    tex.anisotropy = Math.min(16, maxAnisotropy);
     // 양 옆 화질 저하(비등방성) 문제 해결을 위해 Mipmap 활성화 (성능을 고려해 anisotropy는 4로 유지)
     tex.generateMipmaps = true;
     tex.minFilter = THREE.LinearMipmapLinearFilter;
