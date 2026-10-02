@@ -580,6 +580,8 @@ async function init() {
         camera.updateProjectionMatrix(); 
         renderer.setSize(window.innerWidth, window.innerHeight); 
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
+        
+        if (window.updateTimelineArrows) window.updateTimelineArrows();
     };
     window.addEventListener('resize', handleViewportResize);
     window.addEventListener('orientationchange', () => {
@@ -1446,6 +1448,10 @@ window.addEventListener('pointerdown', (e) => {
 window.updateTimelineArrows = () => {
     const list = document.getElementById('side-style-list');
     if (!list) return;
+    
+    // Check if list is rendered
+    if (list.offsetWidth === 0) return;
+    
     const isHorizontal = window.getComputedStyle(list).flexDirection === 'row';
     const containers = list.querySelectorAll('.timeline-container');
     for (let i = 0; i < containers.length - 1; i++) {
@@ -1541,7 +1547,11 @@ window.updateTopCarousel = () => {
     list.innerHTML = baseHTML;
     
     setTimeout(() => {
-        if(window.updateTimelineArrows) window.updateTimelineArrows();
+        if(window.updateTimelineArrows) {
+            window.updateTimelineArrows();
+            setTimeout(window.updateTimelineArrows, 300);
+            setTimeout(window.updateTimelineArrows, 1000);
+        }
     }, 50);
 
     // Attach delegated click listener to the list container
