@@ -1470,7 +1470,7 @@ window.updateTimelineArrows = () => {
                     const center2 = rect2.left + rect2.width / 2;
                     const distance = center2 - center1;
                     
-                    const leftMargin = 28;
+                    const leftMargin = 45;
                     const desiredWidth = distance - (leftMargin * 2) - 6;
                     
                     arrow.classList.add('horizontal-arrow');
